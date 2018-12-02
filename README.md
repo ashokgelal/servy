@@ -1,2 +1,2 @@
 # servy
-An HTTP Server using Elixir OTP
+An HTTP Server using Elixir + Erlang OTP

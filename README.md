@@ -77,3 +77,27 @@ Which can be rewritten in a more concise way by: `%{method: "GET", path: "/wildt
 
 This concise way is only allowed if keys are atoms otherwise you have to use the general => form:
 %{ "method" => "GET", "path" => "/wildthings" }
+
+
+### Map
+Given `conv = %{method: "GET", path: "/wildthings", resp_body: ""}`, you can get the values *method* or
+*path*  like so: `conv[:method]` or `conv[:path]`. You can also use .dot syntax such as `conv.method` or `conv.path`
+Dot syntax is more strict throwing an error if key doesn't exist whereas [] returns nil.
+
+Elixir data structures is immutable so `conv[:resp_body] = "check"` won't work. Even without immutability, if you think
+about it, this doesn't make that much sense as `=` operator is a match operator. You can instead need to:
+`Map.put(conv, "resp_body", "Bears")` this creates a new map.
+
+More concise way: 
+`conv = %{ conv | resp_body: "Bears, Lions, Tigers" }`
+Using the concise way, you can only modify a value cannot add a new one
+
+### Strings
+Double-quoted strings are binaries. `String.length` returns the length and for ascii characters `byte_size` returns
+the length as well but it is actually the number of bytes. So, for non-ascii characters, it will be different:
+
+* `String.length("Lions")` > 5
+* `byte_size("Lions")` > 5
+* `String.length("Liöns")` > 5
+* `byte_size("Liöns")` > 6
+

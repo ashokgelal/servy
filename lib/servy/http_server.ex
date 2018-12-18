@@ -14,13 +14,16 @@ defmodule Servy.HttpServer do
 
     IO.puts("Connection accepted!\n")
 
-    serve(client_socket)
+    spawn(fn -> serve(client_socket) end)
+
     accept_loop(listen_socket)
   end
 
   def serve(client_socket) do
+    IO.puts("#{inspect(self())}: working on it!")
+
     client_socket
-    |> read_request
+    |> read_request()
     |> Servy.Handler.handle()
     |> write_response(client_socket)
   end
@@ -30,16 +33,6 @@ defmodule Servy.HttpServer do
     IO.puts("Received request:\n")
     IO.puts(request)
     request
-  end
-
-  def generate_response(_request) do
-    """
-    HTTP/1.1 200 OK\r
-    Content-Type: text/plain\r
-    Content-Length: 6\r
-    \r
-    Hello!
-    """
   end
 
   def write_response(response, client_socket) do
